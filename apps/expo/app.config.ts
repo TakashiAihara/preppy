@@ -1,6 +1,6 @@
-import { ConfigContext, ExpoConfig } from "@expo/config";
+import type { ExpoConfig } from "@expo/config";
 
-const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
+const defineConfig = (): ExpoConfig => ({
   name: "expo",
   slug: "expo",
   scheme: "expo",
