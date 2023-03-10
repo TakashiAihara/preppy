@@ -1,0 +1,81 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Place {
+  id String [pk]
+  name String [not null]
+  Pack Pack [not null]
+}
+
+Table Pack {
+  id String [pk]
+  name String [not null]
+  Sku Sku [not null]
+  placeId String
+  Place Place
+}
+
+Table ExpiryDate {
+  id String [pk]
+  type Int [not null, default: 0]
+  date DateTime [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  Sku Sku [not null]
+  Queue Queue [not null]
+}
+
+Table Jan {
+  code String [pk]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  Queue Queue [not null]
+  Sku Sku [not null]
+}
+
+Table Sku {
+  id String [pk]
+  note String
+  quantity Int [not null, default: 0]
+  janCode String [not null]
+  jan Jan [not null]
+  expiryDateId String
+  expiryDate ExpiryDate
+  packId String
+  Pack Pack
+  categoryId String
+  Category Category
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Queue {
+  id String [pk]
+  janCode String [not null]
+  jan Jan [not null]
+  expiryDateId String
+  expiryDate ExpiryDate
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Category {
+  id String [pk]
+  name String
+  Sku Sku [not null]
+}
+
+Ref: Pack.placeId > Place.id
+
+Ref: Sku.janCode > Jan.code [delete: Cascade]
+
+Ref: Sku.expiryDateId > ExpiryDate.id [delete: Cascade]
+
+Ref: Sku.packId > Pack.id [delete: Cascade]
+
+Ref: Sku.categoryId > Category.id
+
+Ref: Queue.janCode > Jan.code [delete: Cascade]
+
+Ref: Queue.expiryDateId > ExpiryDate.id [delete: Cascade]
