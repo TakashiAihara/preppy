@@ -5,47 +5,61 @@
 Table Place {
   id String [pk]
   name String [not null]
-  Pack Pack [not null]
+  packs Pack [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
 }
 
 Table Pack {
   id String [pk]
   name String [not null]
-  Sku Sku [not null]
   placeId String
-  Place Place
+  place Place
+  stocks Stock [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
 }
 
 Table ExpiryDate {
   id String [pk]
-  type Int [not null, default: 0]
+  type ExpiryDateType [not null, default: 'SPECIFIC_DATE']
   date DateTime [not null]
+  skus Sku [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
-  Sku Sku [not null]
-  Queue Queue [not null]
 }
 
 Table Jan {
   code String [pk]
+  queues Queue [not null]
+  skus Sku [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
-  Queue Queue [not null]
-  Sku Sku [not null]
 }
 
 Table Sku {
   id String [pk]
+  title String [not null]
   note String
-  quantity Int [not null, default: 0]
-  janCode String [not null]
-  jan Jan [not null]
+  janCode String
+  jan Jan
   expiryDateId String
   expiryDate ExpiryDate
-  packId String
-  Pack Pack
   categoryId String
-  Category Category
+  category Category
+  stocks Stock [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Stock {
+  id String [pk]
+  note String
+  quantity Int [not null, default: 0]
+  packId String
+  pack Pack
+  skuId String
+  sku Sku
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
 }
@@ -54,8 +68,6 @@ Table Queue {
   id String [pk]
   janCode String [not null]
   jan Jan [not null]
-  expiryDateId String
-  expiryDate ExpiryDate
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
 }
@@ -63,7 +75,15 @@ Table Queue {
 Table Category {
   id String [pk]
   name String
-  Sku Sku [not null]
+  skus Sku [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Enum ExpiryDateType {
+  SPECIFIC_DATE
+  DURING_THE_MONTH
+  DURING_THE_YEAR
 }
 
 Ref: Pack.placeId > Place.id
@@ -72,10 +92,10 @@ Ref: Sku.janCode > Jan.code [delete: Cascade]
 
 Ref: Sku.expiryDateId > ExpiryDate.id [delete: Cascade]
 
-Ref: Sku.packId > Pack.id [delete: Cascade]
+Ref: Sku.categoryId > Category.id [delete: Cascade]
 
-Ref: Sku.categoryId > Category.id
+Ref: Stock.packId > Pack.id [delete: Cascade]
+
+Ref: Stock.skuId > Sku.id [delete: Cascade]
 
 Ref: Queue.janCode > Jan.code [delete: Cascade]
-
-Ref: Queue.expiryDateId > ExpiryDate.id [delete: Cascade]

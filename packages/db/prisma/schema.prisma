@@ -15,54 +15,73 @@ model Place {
     id   String @id @default(cuid())
     name String @db.Text
 
-    Pack Pack[]
+    packs Pack[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
 }
 
 model Pack {
     id   String @id @default(cuid())
     name String @db.Text
 
-    Sku Sku[]
-
     placeId String?
-    Place   Place?  @relation(fields: [placeId], references: [id])
-}
+    place   Place?  @relation(fields: [placeId], references: [id])
 
-model ExpiryDate {
-    id   String   @id @default(cuid())
-    type Int      @default(0) @db.SmallInt
-    date DateTime @db.Date
+    stocks Stock[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+}
 
-    Sku   Sku[]
-    Queue Queue[]
+model ExpiryDate {
+    id   String         @id @default(cuid())
+    type ExpiryDateType @default(SPECIFIC_DATE)
+    date DateTime       @db.Date
+
+    skus Sku[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
 }
 
 model Jan {
     code String @id @db.VarChar(14)
 
+    queues Queue[]
+    skus   Sku[]
+
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
-
-    Queue Queue[]
-    Sku   Sku[]
 }
 
 model Sku {
+    id    String  @id @default(cuid())
+    title String
+    note  String?
+
+    janCode      String?     @db.VarChar(14)
+    jan          Jan?        @relation(fields: [janCode], references: [code], onDelete: Cascade)
+    expiryDateId String?
+    expiryDate   ExpiryDate? @relation(fields: [expiryDateId], references: [id], onDelete: Cascade)
+    categoryId   String?
+    category     Category?   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+    stocks Stock[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+model Stock {
     id       String  @id @default(cuid())
     note     String?
     quantity Int     @default(0) @db.Integer
-    janCode  String  @db.VarChar(14)
-    jan      Jan     @relation(fields: [janCode], references: [code], onDelete: Cascade)
 
-    expiryDateId String?
-    expiryDate   ExpiryDate? @relation(fields: [expiryDateId], references: [id], onDelete: Cascade)
-    packId       String?
-    Pack         Pack?       @relation(fields: [packId], references: [id], onDelete: Cascade)
-    categoryId   String?
-    Category     Category?   @relation(fields: [categoryId], references: [id])
+    packId String?
+    pack   Pack?   @relation(fields: [packId], references: [id], onDelete: Cascade)
+    skuId  String?
+    sku    Sku?    @relation(fields: [skuId], references: [id], onDelete: Cascade)
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -71,10 +90,8 @@ model Sku {
 model Queue {
     id String @id @default(cuid())
 
-    janCode      String      @db.VarChar(14)
-    jan          Jan         @relation(fields: [janCode], references: [code], onDelete: Cascade)
-    expiryDateId String?
-    expiryDate   ExpiryDate? @relation(fields: [expiryDateId], references: [id], onDelete: Cascade)
+    janCode String @db.VarChar(14)
+    jan     Jan    @relation(fields: [janCode], references: [code], onDelete: Cascade)
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -85,7 +102,16 @@ model Category {
     id   String  @id @default(cuid())
     name String? @db.Text
 
-    Sku Sku[]
+    skus Sku[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+enum ExpiryDateType {
+    SPECIFIC_DATE
+    DURING_THE_MONTH
+    DURING_THE_YEAR
 }
 
 // model Company {
