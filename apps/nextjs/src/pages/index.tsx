@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { api, type RouterOutputs } from "~/utils/api";
 
+/*
 const PostCard: React.FC<{
   post: RouterOutputs["post"]["all"][number];
   onPostDelete?: () => void;
@@ -26,6 +27,9 @@ const PostCard: React.FC<{
     </div>
   );
 };
+*/
+
+/*
 
 const CreatePostForm: React.FC = () => {
   const utils = api.useContext();
@@ -80,15 +84,21 @@ const CreatePostForm: React.FC = () => {
     </div>
   );
 };
+*/
 
 const Home: NextPage = () => {
+  /*
   const postQuery = api.post.all.useQuery();
+  */
 
+  /*
   const deletePostMutation = api.post.delete.useMutation({
     onSettled: () => postQuery.refetch(),
   });
+  */
 
-  return (
+  return <div></div>;
+  /*
     <>
       <Head>
         <title>Create T3 App</title>
@@ -130,6 +140,7 @@ const Home: NextPage = () => {
       </main>
     </>
   );
+  */
 };
 
 export default Home;

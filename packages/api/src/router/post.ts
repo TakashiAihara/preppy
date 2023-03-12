@@ -2,6 +2,9 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
+export const postRouter = createTRPCRouter({});
+
+/*
 export const postRouter = createTRPCRouter({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.queue.findMany({ orderBy: { id: "desc" } });
@@ -25,3 +28,5 @@ export const postRouter = createTRPCRouter({
     return ctx.prisma.post.delete({ where: { id: input } });
   }),
 });
+
+*/
