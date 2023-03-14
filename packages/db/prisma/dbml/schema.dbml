@@ -31,7 +31,40 @@ Table ExpiryDate {
 
 Table Jan {
   code String [pk]
-  queues Queue [not null]
+  janQueues JanQueue [not null]
+  products Product [not null]
+  productCandidates ProductCandidate [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table ProductCandidate {
+  id String [pk]
+  title String [not null]
+  janCode String
+  jan Jan
+  janOriginSiteId String
+  JanOriginSite JanOriginSite
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table JanOriginSite {
+  id String [pk]
+  title String [not null]
+  productCandidates ProductCandidate [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Product {
+  id String [pk]
+  title String [not null]
+  note String
+  janCode String
+  jan Jan
+  categoryId String
+  category Category
   skus Sku [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -39,14 +72,10 @@ Table Jan {
 
 Table Sku {
   id String [pk]
-  title String [not null]
-  note String
-  janCode String
-  jan Jan
-  expiryDateId String
   expiryDate ExpiryDate
-  categoryId String
-  category Category
+  expiryDateId String
+  product Product
+  productId String
   stocks Stock [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -64,8 +93,9 @@ Table Stock {
   createdAt DateTime [default: `now()`, not null]
 }
 
-Table Queue {
+Table JanQueue {
   id String [pk]
+  quantity Int [not null, default: 0]
   janCode String [not null]
   jan Jan [not null]
   updatedAt DateTime [not null]
@@ -75,9 +105,9 @@ Table Queue {
 Table Category {
   id String [pk]
   name String
-  skus Sku [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
+  Product Product [not null]
 }
 
 Enum ExpiryDateType {
@@ -88,14 +118,20 @@ Enum ExpiryDateType {
 
 Ref: Pack.placeId > Place.id
 
-Ref: Sku.janCode > Jan.code [delete: Cascade]
+Ref: ProductCandidate.janCode > Jan.code [delete: Cascade]
+
+Ref: ProductCandidate.janOriginSiteId > JanOriginSite.id
+
+Ref: Product.janCode > Jan.code [delete: Cascade]
+
+Ref: Product.categoryId > Category.id [delete: Cascade]
 
 Ref: Sku.expiryDateId > ExpiryDate.id [delete: Cascade]
 
-Ref: Sku.categoryId > Category.id [delete: Cascade]
+Ref: Sku.productId > Product.id
 
 Ref: Stock.packId > Pack.id [delete: Cascade]
 
 Ref: Stock.skuId > Sku.id [delete: Cascade]
 
-Ref: Queue.janCode > Jan.code [delete: Cascade]
+Ref: JanQueue.janCode > Jan.code [delete: Cascade]
