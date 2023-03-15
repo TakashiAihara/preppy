@@ -16,6 +16,12 @@
       ],
       "cache": false
     },
+    "db:seed": {
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
+      "cache": false
+    },
     "dev": {
       "persistent": true,
       "cache": false
