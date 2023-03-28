@@ -3,27 +3,16 @@
   "globalDependencies": [
     "**/.env"
   ],
+  "globalEnv": [
+    "CI",
+    "DATABASE_URL",
+    "NODE_ENV",
+    "SKIP_ENV_VALIDATION",
+    "VERCEL",
+    "VERCEL_URL"
+  ],
   "pipeline": {
-    "db:generate": {
-      "inputs": [
-        "prisma/schema.prisma"
-      ],
-      "cache": false
-    },
-    "db:push": {
-      "inputs": [
-        "prisma/schema.prisma"
-      ],
-      "cache": false
-    },
-    "db:seed": {
-      "inputs": [
-        "prisma/schema.prisma"
-      ],
-      "cache": false
-    },
-    "dev": {
-      "persistent": true,
+    "//#clean": {
       "cache": false
     },
     "build": {
@@ -32,31 +21,41 @@
         "^db:generate"
       ],
       "outputs": [
-        ".next/**",
-        ".expo/**"
+        ".next/**"
       ]
     },
-    "lint": {},
-    "lint:fix": {},
     "clean": {
       "cache": false
     },
-    "//#clean": {
-      "cache": false
+    "db:generate": {
+      "cache": false,
+      "inputs": [
+        "prisma/schema.prisma"
+      ]
     },
+    "db:push": {
+      "cache": false,
+      "inputs": [
+        "prisma/schema.prisma"
+      ]
+    },
+    "db:seed": {
+      "cache": false,
+      "inputs": [
+        "prisma/schema.prisma"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {},
+    "lint:fix": {},
     "type-check": {
+      "cache": false,
       "dependsOn": [
         "^db:generate"
-      ],
-      "cache": false
+      ]
     }
-  },
-  "globalEnv": [
-    "CI",
-    "DATABASE_URL",
-    "NODE_ENV",
-    "SKIP_ENV_VALIDATION",
-    "VERCEL",
-    "VERCEL_URL"
-  ]
+  }
 }
