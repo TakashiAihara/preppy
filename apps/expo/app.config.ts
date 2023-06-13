@@ -1,8 +1,9 @@
-import { ExpoConfig, ConfigContext } from "@expo/config";
+import type { ExpoConfig } from "@expo/config";
 
-const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
+const defineConfig = (): ExpoConfig => ({
   name: "expo",
   slug: "expo",
+  scheme: "expo",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
@@ -10,7 +11,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   splash: {
     image: "./assets/icon.png",
     resizeMode: "contain",
-    backgroundColor: "#2e026d",
+    backgroundColor: "#1F104A",
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -23,15 +24,15 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
-      backgroundColor: "#2e026d",
+      backgroundColor: "#1F104A",
     },
   },
   extra: {
     eas: {
-      projectId: "your-project-id",
+      // projectId: "your-project-id",
     },
   },
-  plugins: ["./expo-plugins/with-modify-gradle.js"]
+  plugins: ["./expo-plugins/with-modify-gradle.js"],
 });
 
 export default defineConfig;
