@@ -1,24 +1,203 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-    provider = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
-}
-
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id      String @id @default(cuid())
-    title   String
-    content String
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["jsonProtocol"]
 }
 
+generator dbml {
+    provider = "prisma-dbml-generator"
+}
+
+// Attributes
+model ExpiryDate {
+    id   String         @id @default(cuid())
+    type ExpiryDateType @default(SPECIFIC_DATE)
+    date DateTime       @db.Date
+
+    skus Sku[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// Pure Jan
+model Jan {
+    code String @id @db.VarChar(14)
+
+    queues     Queue[]
+    products   Product[]
+    candidates Candidate[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// For select Product
+model Candidate {
+    id    String @id @default(cuid())
+    title String
+
+    janCode   String   @db.VarChar(14)
+    jan       Jan      @relation(fields: [janCode], references: [code], onDelete: Cascade)
+    janSiteId String?
+    janSite   JanSite? @relation(fields: [janSiteId], references: [id])
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// Master
+model JanSite {
+    id    String @id @default(cuid())
+    title String
+
+    candidates Candidate[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+model Product {
+    id    String  @id @default(cuid())
+    title String
+    note  String?
+
+    janCode    String   @db.VarChar(14)
+    jan        Jan      @relation(fields: [janCode], references: [code], onDelete: Cascade)
+    categoryId String
+    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+    skus Sku[]
+    tags Tag[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// Product x ExpiryDate (or else attributes) -> Sku
+model Sku {
+    id String @id @default(cuid())
+
+    // attributes
+    expiryDateId String?
+    expiryDate   ExpiryDate? @relation(fields: [expiryDateId], references: [id], onDelete: Cascade)
+    productId    String      @db.VarChar(14)
+    product      Product     @relation(fields: [productId], references: [id])
+
+    stocks Stock[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// Sku quantity, generally one to one sku
+model Stock {
+    id       String  @id @default(cuid())
+    note     String?
+    quantity Int     @default(0) @db.Integer
+
+    userId  String
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    skuId   String
+    sku     Sku     @relation(fields: [skuId], references: [id])
+    groupId String?
+    group   Group?  @relation(fields: [groupId], references: [id])
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// If already exists, add Stock
+model Queue {
+    id       String @id @default(cuid())
+    quantity Int    @default(0) @db.Integer
+
+    janCode String @db.VarChar(14)
+    jan     Jan    @relation(fields: [janCode], references: [code], onDelete: Cascade)
+    userId  String
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// Like folder stock management
+model Group {
+    id   String  @id @default(cuid())
+    name String? @db.Text
+
+    user    User    @relation(fields: [userId], references: [id])
+    userId  String
+    group   Group?  @relation("GroupToGroup", fields: [groupId], references: [id])
+    groupId String?
+
+    groups Group[] @relation("GroupToGroup")
+    stocks Stock[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+// For all user search product, possible add by user
+model Category {
+    id   String @id @default(cuid())
+    name String @db.Text
+
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String?
+
+    products Product[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+model Tag {
+    id   String @id @default(cuid())
+    name String @db.Text
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    products Product[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}
+
+enum ExpiryDateType {
+    SPECIFIC_DATE
+    DURING_THE_MONTH
+    DURING_THE_YEAR
+}
+
+// model Company {
+//     id      String @id @default(cuid())
+//     code    String @db.VarChar(10) @unique
+//     name    String? @db.Text
+// }
+
+// model Country {
+//     id        String   @id @default(cuid())
+//     code      String   @unique @db.VarChar(2)
+//     name      String
+//     updatedAt DateTime @updatedAt
+//     createdAt DateTime @default(now())
+// }
+
+// model Site {
+//     id        String   @id @default(cuid())
+//     name      String
+//     updatedAt DateTime @updatedAt
+//     createdAt DateTime @default(now())
+// }
+
 // NextAuth.js Models
-// NOTE: When using postgresql, mysql or sqlserver, 
+// NOTE: When using postgresql, mysql or sqlserver,
 // uncomment the @db.Text annotations below
 // @see https://next-auth.js.org/schemas/models
 model Account {
@@ -27,14 +206,15 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String? // @db.Text
+    id_token          String? @db.Text
     session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -42,9 +222,10 @@ model Account {
 model Session {
     id           String   @id @default(cuid())
     sessionToken String   @unique
-    userId       String
     expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -53,8 +234,14 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    accounts      Account[]
-    sessions      Session[]
+
+    accounts   Account[]
+    sessions   Session[]
+    queues     Queue[]
+    stocks     Stock[]
+    groups     Group[]
+    tags       Tag[]
+    categories Category[]
 }
 
 model VerificationToken {
@@ -63,4 +250,11 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// Temporary schema for tes
+model Post {
+    id      String @id @default(cuid())
+    title   String
+    content String
 }

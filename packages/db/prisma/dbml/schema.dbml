@@ -1,0 +1,222 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table ExpiryDate {
+  id String [pk]
+  type ExpiryDateType [not null, default: 'SPECIFIC_DATE']
+  date DateTime [not null]
+  skus Sku [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Jan {
+  code String [pk]
+  queues Queue [not null]
+  products Product [not null]
+  candidates Candidate [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Candidate {
+  id String [pk]
+  title String [not null]
+  janCode String [not null]
+  jan Jan [not null]
+  janSiteId String
+  janSite JanSite
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table JanSite {
+  id String [pk]
+  title String [not null]
+  candidates Candidate [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Product {
+  id String [pk]
+  title String [not null]
+  note String
+  janCode String [not null]
+  jan Jan [not null]
+  categoryId String [not null]
+  category Category [not null]
+  skus Sku [not null]
+  tags Tag [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Sku {
+  id String [pk]
+  expiryDateId String
+  expiryDate ExpiryDate
+  productId String [not null]
+  product Product [not null]
+  stocks Stock [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Stock {
+  id String [pk]
+  note String
+  quantity Int [not null, default: 0]
+  userId String [not null]
+  user User [not null]
+  skuId String [not null]
+  sku Sku [not null]
+  groupId String
+  group Group
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Queue {
+  id String [pk]
+  quantity Int [not null, default: 0]
+  janCode String [not null]
+  jan Jan [not null]
+  userId String [not null]
+  user User [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Group {
+  id String [pk]
+  name String
+  user User [not null]
+  userId String [not null]
+  group Group
+  groupId String
+  groups Group [not null]
+  stocks Stock [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Category {
+  id String [pk]
+  name String [not null]
+  user User
+  userId String
+  products Product [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Tag {
+  id String [pk]
+  name String [not null]
+  user User [not null]
+  userId String [not null]
+  products Product [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Account {
+  id String [pk]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  expires DateTime [not null]
+  userId String [not null]
+  user User [not null]
+}
+
+Table User {
+  id String [pk]
+  name String
+  email String [unique]
+  emailVerified DateTime
+  image String
+  accounts Account [not null]
+  sessions Session [not null]
+  queues Queue [not null]
+  stocks Stock [not null]
+  groups Group [not null]
+  tags Tag [not null]
+  categories Category [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Table Post {
+  id String [pk]
+  title String [not null]
+  content String [not null]
+}
+
+Enum ExpiryDateType {
+  SPECIFIC_DATE
+  DURING_THE_MONTH
+  DURING_THE_YEAR
+}
+
+Ref: Candidate.janCode > Jan.code [delete: Cascade]
+
+Ref: Candidate.janSiteId > JanSite.id
+
+Ref: Product.janCode > Jan.code [delete: Cascade]
+
+Ref: Product.categoryId > Category.id [delete: Cascade]
+
+Ref: Sku.expiryDateId > ExpiryDate.id [delete: Cascade]
+
+Ref: Sku.productId > Product.id
+
+Ref: Stock.userId > User.id [delete: Cascade]
+
+Ref: Stock.skuId > Sku.id
+
+Ref: Stock.groupId > Group.id
+
+Ref: Queue.janCode > Jan.code [delete: Cascade]
+
+Ref: Queue.userId > User.id [delete: Cascade]
+
+Ref: Group.userId > User.id
+
+Ref: Group.groupId - Group.id
+
+Ref: Category.userId > User.id [delete: Cascade]
+
+Ref: Tag.userId > User.id
+
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
