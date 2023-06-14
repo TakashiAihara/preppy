@@ -1,0 +1,19 @@
+[remote "origin"]
+	url = https://github.com/TakashiAihara/preppy.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+
+[remote "template"]
+	url = https://github.com/t3-oss/create-t3-turbo.git
+	fetch = +refs/heads/*:refs/remotes/template/*
+
+[gitflow "branch"]
+	master = main
+	develop = develop
+
+[gitflow "prefix"]
+	feature = feature/
+	release = release/
+	hotfix = hotfix/
+	support = support/
+	versiontag =
+	bugfix = bugfix/
