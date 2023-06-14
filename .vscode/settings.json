@@ -11,5 +11,22 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "tailwindCSS.experimental.configFile": "./packages/config/tailwind/index.ts"
+  "tailwindCSS.experimental.configFile": "./packages/config/tailwind/index.ts",
+  "cSpell.words": [
+    "authed",
+    "buildscript",
+    "dbml",
+    "ianvs",
+    "manypkg",
+    "nativewind",
+    "nextjs",
+    "Solito",
+    "superjson",
+    "tailwindcss",
+    "tanstack",
+    "TRPC",
+    "Turborepo",
+    "Typesafe",
+    "unauthed"
+  ]
 }
