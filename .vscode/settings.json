@@ -14,19 +14,24 @@
   "tailwindCSS.experimental.configFile": "./packages/config/tailwind/index.ts",
   "cSpell.words": [
     "authed",
+    "automerge",
     "buildscript",
+    "CLIENTVAR",
     "dbml",
     "ianvs",
     "manypkg",
     "nativewind",
+    "NEXTAUTH",
     "nextjs",
     "Solito",
     "superjson",
     "tailwindcss",
     "tanstack",
+    "Transpiles",
     "TRPC",
     "Turborepo",
     "Typesafe",
-    "unauthed"
+    "unauthed",
+    "Vercel"
   ]
 }
