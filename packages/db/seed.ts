@@ -1,16 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 
 // HACK: support multi file
-import janOriginSiteSeeds from "./seeds/janSite";
+import janSiteSeeds from "./seeds/janSite";
+import postSeeds from "./seeds/post";
 
 const prisma = new PrismaClient();
 
-const name = "janOriginSite";
-
 async function main() {
 	await Promise.all(
-		janOriginSiteSeeds.map(async (seed) => {
-			await prisma[name].upsert({
+		janSiteSeeds.map(async (seed) => {
+			await prisma["janSite"].upsert({
 				where: { id: seed.id },
 				update: {},
 				create: {
@@ -19,6 +18,19 @@ async function main() {
 			});
 		}),
 	);
+
+	await Promise.all(
+		postSeeds.map(async (seed) => {
+			await prisma["post"].upsert({
+				where: { id: seed.id },
+				update: {},
+				create: {
+					...seed,
+				},
+			});
+		}),
+	);
+
 	//   const bob = await prisma.user.upsert({
 	//     where: { email: "bob@prisma.io" },
 	//     update: {},
