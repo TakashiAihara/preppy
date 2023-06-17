@@ -18,6 +18,14 @@
       "persistent": true,
       "cache": false
     },
+    "dev:android": {
+      "persistent": true,
+      "cache": false
+    },
+    "dev:ios": {
+      "persistent": true,
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", ".expo/**"]

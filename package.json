@@ -14,6 +14,8 @@
     "db:seed": "turbo db:seed",
     "db:studio": "pnpm -F db dev",
     "dev": "turbo dev --parallel",
+    "dev:android": "turbo dev:android --parallel",
+    "dev:ios": "turbo dev:ios --parallel",
     "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
     "lint": "turbo lint && manypkg check",
     "lint:fix": "turbo lint:fix && manypkg fix",
