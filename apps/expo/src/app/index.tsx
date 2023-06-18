@@ -6,40 +6,44 @@ import { FlashList } from "@shopify/flash-list";
 
 import { api, type RouterOutputs } from "~/utils/api";
 
-const PostCard: React.FC<{
-  post: RouterOutputs["post"]["all"][number];
-  onDelete: () => void;
-}> = ({ post, onDelete }) => {
+const QueueCard: React.FC<{
+  queue: RouterOutputs["queue"]["all"][number];
+  // onDelete: () => void;
+  // }> = ({ queue, onDelete }) => {
+}> = ({ queue }) => {
   const router = useRouter();
 
   return (
     <View className="flex flex-row rounded-lg bg-white/10 p-4">
       <View className="flex-grow">
-        <TouchableOpacity onPress={() => router.push(`/post/${post.id}`)}>
+        <TouchableOpacity onPress={() => router.push(`/queue/${queue.id}`)}>
           <Text className="text-xl font-semibold text-pink-400">
-            {post.title}
+            {queue.janCode}
           </Text>
-          <Text className="mt-2 text-white">{post.content}</Text>
+          <Text className="mt-2 text-white">
+            {queue.createdAt.toLocaleDateString()}
+          </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={onDelete}>
+      {/* <TouchableOpacity onPress={onDelete}>
         <Text className="font-bold uppercase text-pink-400">Delete</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
 
-const CreatePost: React.FC = () => {
+/*
+const CreateQueue: React.FC = () => {
   const utils = api.useContext();
 
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
 
-  const { mutate, error } = api.post.create.useMutation({
+  const { mutate, error } = api.queue.create.useMutation({
     async onSuccess() {
       setTitle("");
       setContent("");
-      await utils.post.all.invalidate();
+      await utils.queue.all.invalidate();
     },
   });
 
@@ -78,20 +82,22 @@ const CreatePost: React.FC = () => {
           });
         }}
       >
-        <Text className="font-semibold text-white">Publish post</Text>
+        <Text className="font-semibold text-white">Publish queue</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
+*/
+
 const Index = () => {
   const utils = api.useContext();
 
-  const postQuery = api.post.all.useQuery();
+  const queueQuery = api.queue.all.useQuery();
 
-  const deletePostMutation = api.post.delete.useMutation({
-    onSettled: () => utils.post.all.invalidate(),
-  });
+  // const deleteQueueMutation = api.queue.delete.useMutation({
+  //   onSettled: () => utils.queue.all.invalidate(),
+  // });
 
   return (
     <SafeAreaView className="bg-[#1F104A]">
@@ -103,30 +109,30 @@ const Index = () => {
         </Text>
 
         <Button
-          onPress={() => void utils.post.all.invalidate()}
-          title="Refresh posts"
+          onPress={() => void utils.queue.all.invalidate()}
+          title="Refresh queues"
           color={"#f472b6"}
         />
 
         <View className="py-2">
           <Text className="font-semibold italic text-white">
-            Press on a post
+            Press on a queue
           </Text>
         </View>
 
         <FlashList
-          data={postQuery.data}
+          data={queueQuery.data}
           estimatedItemSize={20}
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={(p) => (
-            <PostCard
-              post={p.item}
-              onDelete={() => deletePostMutation.mutate(p.item.id)}
+            <QueueCard
+              queue={p.item}
+              // onDelete={() => deleteQueueMutation.mutate(p.item.id)}
             />
           )}
         />
 
-        <CreatePost />
+        {/* <CreateQueue /> */}
       </View>
     </SafeAreaView>
   );

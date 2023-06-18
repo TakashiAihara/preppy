@@ -2,47 +2,52 @@ import React from "react";
 import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
+
 import { api, type RouterOutputs } from "../utils/api";
 
-const PostCard: React.FC<{
-  post: RouterOutputs["post"]["all"][number];
+const QueueCard: React.FC<{
+  queue: RouterOutputs["queue"]["all"][number];
   onPress: () => void;
-  onDelete: () => void;
-}> = ({ post, onPress, onDelete }) => {
+  //   onDelete: () => void;
+  // }> = ({ queue, onPress, onDelete }) => {
+}> = ({ queue, onPress }) => {
   return (
     <View className="flex flex-row rounded-lg bg-white/10 p-4">
       <View className="flex-grow">
         <TouchableOpacity onPress={onPress}>
           <Text
             className={`text-xl font-semibold text-[#cc66ff] ${
-              !post.title ? "italic" : ""
+              !queue.janCode ? "italic" : ""
             }`}
           >
-            {post.title || "Untitled"}
+            {queue.janCode || "Untitled"}
           </Text>
-          <Text className={`mt-2 text-white ${!post.content ? "italic" : ""}`}>
-            {post.content || "No content"}
+          <Text
+            className={`mt-2 text-white ${!queue.createdAt ? "italic" : ""}`}
+          >
+            {queue.createdAt.toLocaleDateString() || "No content"}
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={onDelete}>
+      {/* <TouchableOpacity onPress={onDelete}>
         <Text className="font-bold uppercase text-pink-400">Delete</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
 
-const CreatePost: React.FC = () => {
+/*
+const CreateQueue: React.FC = () => {
   const utils = api.useContext();
 
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
 
-  const { mutate } = api.post.create.useMutation({
+  const { mutate } = api.queue.create.useMutation({
     async onSuccess() {
       setTitle("");
       setContent("");
-      await utils.post.all.invalidate();
+      await utils.queue.all.invalidate();
     },
   });
 
@@ -71,19 +76,21 @@ const CreatePost: React.FC = () => {
           });
         }}
       >
-        <Text className="font-semibold text-white">Publish post</Text>
+        <Text className="font-semibold text-white">Publish queue</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export const HomeScreen = () => {
-  const postQuery = api.post.all.useQuery();
-  const [showPost, setShowPost] = React.useState<string | null>(null);
+*/
 
-  const deletePostMutation = api.post.delete.useMutation({
-    onSettled: () => postQuery.refetch(),
-  });
+export const HomeScreen = () => {
+  const queueQuery = api.queue.all.useQuery();
+  const [showQueue, setShowQueue] = React.useState<string | null>(null);
+
+  // const deleteQueueMutation = api.queue.delete.useMutation({
+  //   onSettled: () => queueQuery.refetch(),
+  // });
 
   return (
     <SafeAreaView className="bg-[#2e026d] bg-gradient-to-b from-[#2e026d] to-[#15162c]">
@@ -93,38 +100,38 @@ export const HomeScreen = () => {
         </Text>
 
         <Button
-          onPress={() => void postQuery.refetch()}
-          title="Refresh posts"
+          onPress={() => void queueQuery.refetch()}
+          title="Refresh queues"
           color={"#cc66ff"}
         />
 
         <View className="py-2">
-          {showPost ? (
+          {showQueue ? (
             <Text className="text-white">
-              <Text className="font-semibold">Selected post: </Text>
-              {showPost}
+              <Text className="font-semibold">Selected queue: </Text>
+              {showQueue}
             </Text>
           ) : (
             <Text className="font-semibold italic text-white">
-              Press on a post
+              Press on a queue
             </Text>
           )}
         </View>
 
         <FlashList
-          data={postQuery.data}
+          data={queueQuery.data}
           estimatedItemSize={20}
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={(p) => (
-            <PostCard
-              post={p.item}
-              onPress={() => setShowPost(p.item.id)}
-              onDelete={() => deletePostMutation.mutate(p.item.id)}
+            <QueueCard
+              queue={p.item}
+              onPress={() => setShowQueue(p.item.id)}
+              // onDelete={() => deleteQueueMutation.mutate(p.item.id)}
             />
           )}
         />
 
-        <CreatePost />
+        {/* <CreateQueue /> */}
       </View>
     </SafeAreaView>
   );

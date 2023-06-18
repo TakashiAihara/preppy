@@ -29,7 +29,7 @@ module.exports = function (api) {
           tailwindConfig: lazyLoadConfig(),
         },
       ],
-      "expo-router/babel",
+      require.resolve("expo-router/babel"),
       ["module-resolver", { alias: { "~": "./src" } }],
     ],
   };
