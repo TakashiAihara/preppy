@@ -14,11 +14,12 @@ const findSeedsFiles = () => (
 )
 
 const applySeed = async (seed: any, schemaName: string) => {
-	console.log(`Applying seed for ${schemaName} with id ${seed.id}`)
+	const prim = seed.id ? "id" : "code"
+	console.log(`Applying seed for ${schemaName} with primary key ${seed[prim]}`)
 
 	// @ts-ignore TODO: fix this type define
 	await prisma[schemaName].upsert({
-		where: { id: seed.id },
+		where: { [prim]: seed[prim] },
 		update: {},
 		create: seed,
 	})
