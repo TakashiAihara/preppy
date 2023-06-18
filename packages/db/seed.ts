@@ -1,60 +1,48 @@
 import { PrismaClient } from "@prisma/client";
 
-// HACK: support multi file
-import janSiteSeeds from "./seeds/janSite";
-import postSeeds from "./seeds/post";
+import * as fs from "fs";
+import { extname } from "path";
 
 const prisma = new PrismaClient();
+const seedsDir = "seeds"
 
-async function main() {
-	await Promise.all(
-		janSiteSeeds.map(async (seed) => {
-			await prisma["janSite"].upsert({
-				where: { id: seed.id },
-				update: {},
-				create: {
-					...seed,
-				},
-			});
-		}),
-	);
+const findSeedsFiles = () => (
+	fs.readdirSync(seedsDir, {
+		encoding: "utf8",
+		withFileTypes: true
+	}).filter(e => e.isFile()).map(e => e.name)
+)
 
-	await Promise.all(
-		postSeeds.map(async (seed) => {
-			await prisma["post"].upsert({
-				where: { id: seed.id },
-				update: {},
-				create: {
-					...seed,
-				},
-			});
-		}),
-	);
-
-	//   const bob = await prisma.user.upsert({
-	//     where: { email: "bob@prisma.io" },
-	//     update: {},
-	//     create: {
-	//       email: "bob@prisma.io",
-	//       name: "Bob",
-	//       posts: {
-	//         create: [
-	//           {
-	//             title: "Follow Prisma on Twitter",
-	//             content: "https://twitter.com/prisma",
-	//             published: true,
-	//           },
-	//           {
-	//             title: "Follow Nexus on Twitter",
-	//             content: "https://twitter.com/nexusgql",
-	//             published: true,
-	//           },
-	//         ],
-	//       },
-	//     },
-	//   });
+const applySeed = async (seed: any, schemaName: string) => {
+	// @ts-ignore TODO: fix this type define
+	await prisma[schemaName].upsert({
+		where: { id: seed.id },
+		update: {},
+		create: seed,
+	})
 }
-main()
+
+const applySeeds = async (seeds: any, schemaName: string) => {
+	await seeds.map(async (seed: any) => {
+		applySeed(seed, schemaName)
+	})
+}
+
+const applySeedsFile = async (seedsFile: string) => {
+	const schemaName = seedsFile.replace(extname(seedsFile), "")
+	const seeds = JSON.parse(fs.readFileSync(`${seedsDir}/${seedsFile}`, "utf8"))
+	await applySeeds(seeds, schemaName)
+}
+
+async function applySeedsFiles(seedsFiles: string[]) {
+	await Promise.all(
+		seedsFiles.map(async (seedsFile) => {
+			await applySeedsFile(seedsFile)
+		})
+	);
+}
+
+applySeedsFiles(findSeedsFiles())
 	.then(async () => {
 		await prisma.$disconnect();
 	})
