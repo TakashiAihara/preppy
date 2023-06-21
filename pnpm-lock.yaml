@@ -108,6 +108,9 @@ importers:
       '@acme/tailwind-config':
         specifier: ^0.1.0
         version: link:../../packages/config/tailwind
+      '@acme/type':
+        specifier: ^0.1.0
+        version: link:../../packages/type
       '@babel/core':
         specifier: ^7.22.5
         version: 7.22.5
@@ -199,6 +202,9 @@ importers:
       '@acme/tailwind-config':
         specifier: ^0.1.0
         version: link:../../packages/config/tailwind
+      '@acme/type':
+        specifier: ^0.1.0
+        version: link:../../packages/type
       '@types/node':
         specifier: ^18.15.3
         version: 18.15.3
@@ -359,6 +365,18 @@ importers:
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@18.15.3)(typescript@5.1.3)
+      typescript:
+        specifier: ^5.1.3
+        version: 5.1.3
+
+  packages/type:
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: ^0.1.0
+        version: link:../config/eslint
+      eslint:
+        specifier: ^8.42.0
+        version: 8.42.0
       typescript:
         specifier: ^5.1.3
         version: 5.1.3

@@ -1,0 +1,19 @@
+{
+  "name": "@acme/type",
+  "version": "0.1.0",
+  "main": "",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "typeScriptVersion": "5.1",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@acme/eslint-config": "^0.1.0",
+    "eslint": "^8.42.0",
+    "typescript": "^5.1.3"
+  }
+}
