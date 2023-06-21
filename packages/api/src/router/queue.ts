@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
+import { PrismaDefaultType, PrismaContextType } from "@acme/db"
+
 export const queueRouter = createTRPCRouter({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.queue.findMany({ orderBy: { createdAt: "desc" } });
