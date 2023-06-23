@@ -31,8 +31,9 @@
   },
   "devDependencies": {
     "@acme/eslint-config": "^0.1.0",
-    "@acme/type": "^0.1.0",
+    "@acme/prettier-config": "^0.1.0",
     "@acme/tailwind-config": "^0.1.0",
+    "@acme/type": "^0.1.0",
     "@types/node": "^18.15.3",
     "@types/react": "18.0.27",
     "@types/react-dom": "^18.2.5",
