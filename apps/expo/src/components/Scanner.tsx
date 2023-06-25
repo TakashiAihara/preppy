@@ -1,12 +1,13 @@
 // import { Asset, useAssets } from "expo-asset";
 // import { Audio, AVPlaybackSource } from "expo-av";
-import { api } from "~/utils/api";
+import { useEffect, useState } from "react";
+import { Button, Text, View } from "react-native";
 import {
   BarCodeScanner,
   type BarCodeScannerResult,
 } from "expo-barcode-scanner";
-import { useEffect, useState } from "react";
-import { Button, Text, View } from "react-native";
+
+import { api } from "~/utils/api";
 
 // import { api } from "~/utils/api";
 

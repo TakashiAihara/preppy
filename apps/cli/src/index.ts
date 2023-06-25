@@ -1,7 +1,8 @@
-import type { AppRouter } from "@acme/api";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { Command, Option } from "commander";
 import superjson from "superjson";
+
+import type { AppRouter } from "@acme/api";
 
 type OptionType = { origin: string; quantity: number };
 
@@ -17,7 +18,7 @@ const createTRPCClient = (origin: string) => {
 };
 
 const originOption = new Option("-o, --origin <origin>", "origin").default(
-  "http://localhost:3000"
+  "http://localhost:3000",
 );
 const quantityOption = new Option("-q, --quantity <quantity>", "quantity")
   .default(1)

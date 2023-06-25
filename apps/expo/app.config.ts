@@ -37,8 +37,8 @@ const defineConfig = (): ExpoConfig => ({
     [
       "expo-barcode-scanner",
       {
-        "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
-      }
+        cameraPermission: "Allow $(PRODUCT_NAME) to access camera.",
+      },
     ],
   ],
 });
