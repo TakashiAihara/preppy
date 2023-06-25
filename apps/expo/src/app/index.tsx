@@ -1,11 +1,12 @@
-import { FlashList } from "@shopify/flash-list";
-import QueueCard from "~/components/QueueCard";
-import Scanner from "~/components/Scanner";
-import { api } from "~/utils/api";
-import { Stack } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+import { FlashList } from "@shopify/flash-list";
+
+import { api } from "~/utils/api";
+import QueueCard from "~/components/QueueCard";
+import Scanner from "~/components/Scanner";
 
 const Index = () => {
   const utils = api.useContext();

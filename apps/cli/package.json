@@ -1,4 +1,13 @@
 {
+  "name": "@acme/cli",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
   "dependencies": {
     "@trpc/client": "^10.25.0",
     "@trpc/server": "^10.25.0",
@@ -17,14 +26,5 @@
     "esbuild": "^0.17.19",
     "eslint": "^8.40.0",
     "typescript": "^5.0.4"
-  },
-  "main": "dist/index.js",
-  "name": "@acme/cli",
-  "private": true,
-  "scripts": {
-    "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node",
-    "lint": "eslint .",
-    "type-check": "tsc --noEmit"
-  },
-  "version": "0.1.0"
+  }
 }
