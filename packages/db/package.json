@@ -9,7 +9,7 @@
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
     "db:seed": "pnpm with-env prisma db seed",
-    "dev": "pnpm with-env prisma studio --port 5556",
+    "db:studio": "pnpm with-env prisma studio --port 5556",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
