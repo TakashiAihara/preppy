@@ -175,12 +175,6 @@ Table VerificationToken {
   }
 }
 
-Table Post {
-  id String [pk]
-  title String [not null]
-  content String [not null]
-}
-
 Enum ExpiryDateType {
   SPECIFIC_DATE
   DURING_THE_MONTH
