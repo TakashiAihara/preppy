@@ -5,9 +5,9 @@
     "paths": {
       "~/*": ["./src/*"]
     },
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "types": ["@acme/type"]
   },
-  "types": ["@acme/type"],
   "exclude": [],
   "include": [
     "next-env.d.ts",
