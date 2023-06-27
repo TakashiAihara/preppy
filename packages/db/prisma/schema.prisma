@@ -251,10 +251,3 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
-
-// Temporary schema for tes
-model Post {
-    id      String @id @default(cuid())
-    title   String
-    content String
-}
