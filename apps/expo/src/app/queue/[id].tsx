@@ -3,7 +3,7 @@ import { SplashScreen, Stack, usePathname, useSearchParams } from "expo-router";
 
 import { api } from "~/utils/api";
 
-const Queue: React.FC = () => {
+const QueueId: React.FC = () => {
   const { id } = useSearchParams();
   if (!id || typeof id !== "string") throw new Error("unreachable");
   const { data } = api.queue.byId.useQuery({ id });
@@ -25,4 +25,4 @@ const Queue: React.FC = () => {
   );
 };
 
-export default Queue;
+export default QueueId;
