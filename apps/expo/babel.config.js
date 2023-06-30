@@ -30,7 +30,15 @@ module.exports = function (api) {
         },
       ],
       require.resolve("expo-router/babel"),
-      ["module-resolver", { alias: { "~": "./src" } }],
+      [
+        "module-resolver",
+        {
+          alias: {
+            "~": "./src",
+            "@": ".",
+          },
+        },
+      ],
     ],
   };
 };

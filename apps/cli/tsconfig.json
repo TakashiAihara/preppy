@@ -13,7 +13,8 @@
     "target": "es2022",
     "outDir": "dist",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts", "src/index.tsx"],
