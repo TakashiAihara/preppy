@@ -27,6 +27,7 @@ const config = {
     "",
     "^@acme/(.*)$",
     "",
+    "^@/(.*)$",
     "^~/utils/(.*)$",
     "^~/components/(.*)$",
     "^~/styles/(.*)$",

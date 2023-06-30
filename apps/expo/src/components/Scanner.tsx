@@ -9,8 +9,8 @@ import {
 
 import { api } from "~/utils/api";
 
-// import * as a from "../../assets/decision29.mp3";
-// import a from "../../assets/decision29.mp3";
+// import * as a from "@/assets/decision29.mp3";
+// import a from "@/assets/decision29.mp3";
 
 // await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
 
@@ -28,7 +28,7 @@ const Scanner: React.FC = () => {
 
   async function playSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("../../assets/decision29.mp3"),
+      require("@/assets/decision29.mp3"),
     );
     setSound(sound);
     await sound.playAsync();
