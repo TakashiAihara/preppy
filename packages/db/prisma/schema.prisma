@@ -8,6 +8,24 @@ generator client {
     previewFeatures = ["jsonProtocol"]
 }
 
+generator zod {
+    provider                         = "zod-prisma-types"
+    output                           = "../zod"
+    useMultipleFiles                 = false // default: false
+    createInputTypes                 = true // default: true
+    createModelTypes                 = true // default: true
+    addInputTypeValidation           = true // default: true
+    addIncludeType                   = true // default: true
+    addSelectType                    = true // default: true
+    validateWhereUniqueInput         = false // default: false
+    createOptionalDefaultValuesTypes = false // default: false
+    createRelationValuesTypes        = false // default: false
+    createPartialTypes               = false // default: false
+    useDefaultValidators             = true // default: true
+    coerceDate                       = true // default: true
+    writeNullishInModelTypes         = false // default: false
+}
+
 generator dbml {
     provider = "prisma-dbml-generator"
 }
@@ -23,32 +41,20 @@ model ExpiryDate {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([type, dateType, date])
 }
 
 // Pure Jan
 model Jan {
     code String @id @db.VarChar(14)
 
-    queues     Queue[]
-    products   Product[]
-    candidates Candidate[]
+    products Product[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
-}
 
-// For select Product
-model Candidate {
-    id    String @id @default(cuid())
-    title String
-
-    janCode   String   @db.VarChar(14)
-    jan       Jan      @relation(fields: [janCode], references: [code], onDelete: Cascade)
-    janSiteId String?
-    janSite   JanSite? @relation(fields: [janSiteId], references: [id])
-
-    updatedAt DateTime @updatedAt
-    createdAt DateTime @default(now())
+    @@unique([code])
 }
 
 // Master
@@ -56,27 +62,51 @@ model JanSite {
     id    String @id @default(cuid())
     title String
 
-    candidates Candidate[]
+    Product Product[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([id])
+}
+
+model Note {
+    id      String @id @default(cuid())
+    content String
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    Product   Product? @relation(fields: [productId], references: [id])
+    productId String?
+
+    @@unique([id])
+    @@index([userId])
 }
 
 model Product {
     id    String  @id @default(cuid())
     title String
-    note  String?
+    image String?
 
     janCode    String   @db.VarChar(14)
     jan        Jan      @relation(fields: [janCode], references: [code], onDelete: Cascade)
     categoryId String
     category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    janSiteId  String?
+    janSite    JanSite? @relation(fields: [janSiteId], references: [id])
 
-    skus Sku[]
-    tags Tag[]
+    skus  Sku[]
+    tags  Tag[]
+    notes Note[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([title, janCode, janSiteId])
+    @@index([title])
 }
 
 // Product x ExpiryDate (or else attributes) -> Sku
@@ -93,13 +123,15 @@ model Sku {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([expiryDateId, productId])
 }
 
 // Sku quantity, generally one to one sku
 model Stock {
-    id       String  @id @default(cuid())
-    note     String?
-    quantity Int     @default(0) @db.Integer
+    id          String  @id @default(cuid())
+    description String?
+    quantity    Int     @default(0) @db.Integer
 
     userId  String
     user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -110,20 +142,9 @@ model Stock {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
-}
 
-// If already exists, add Stock
-model Queue {
-    id       String @id @default(cuid())
-    quantity Int    @default(0) @db.Integer
-
-    janCode String @db.VarChar(14)
-    jan     Jan    @relation(fields: [janCode], references: [code], onDelete: Cascade)
-    userId  String
-    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    updatedAt DateTime @updatedAt
-    createdAt DateTime @default(now())
+    @@unique([skuId, groupId, userId])
+    @@index([userId])
 }
 
 // Like folder stock management
@@ -141,6 +162,9 @@ model Group {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([name, userId, groupId])
+    @@index([name, userId])
 }
 
 // For all user search product, possible add by user
@@ -155,6 +179,9 @@ model Category {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([name, userId])
+    @@index([name, userId])
 }
 
 model Tag {
@@ -168,6 +195,9 @@ model Tag {
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
+
+    @@unique([name, userId])
+    @@index([name, userId])
 }
 
 enum ExpiryDateType {
@@ -223,31 +253,38 @@ model Account {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
     id           String   @id @default(cuid())
-    sessionToken String   @unique
+    sessionToken String
     expires      DateTime
 
     userId String
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([sessionToken])
+    @@index([userId])
 }
 
 model User {
     id            String    @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?
     emailVerified DateTime?
     image         String?
 
     accounts   Account[]
     sessions   Session[]
-    queues     Queue[]
     stocks     Stock[]
     groups     Group[]
     tags       Tag[]
     categories Category[]
+    Note       Note[]
+
+    @@unique([email])
+    @@index([name, email])
 }
 
 model VerificationToken {
