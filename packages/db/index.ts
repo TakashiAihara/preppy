@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 export * from "@prisma/client";
+export * as zodTypes from "./zod";
 
 const globalForPrisma = globalThis as { prisma?: PrismaClient };
 
