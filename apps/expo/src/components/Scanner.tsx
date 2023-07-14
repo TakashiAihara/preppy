@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Audio } from "expo-av";
 import { type Sound } from "expo-av/build/Audio";
 import {
@@ -20,9 +20,9 @@ const Scanner: React.FC = () => {
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [canScan, setCanScan] = useState<boolean>(false);
 
-  const { mutate, error } = api.queue.createOrAdd.useMutation({
+  const { mutate, error } = api.stock.createOrAddQuantity.useMutation({
     async onSuccess() {
-      await utils.queue.all.invalidate();
+      await utils.stock.all.invalidate();
     },
   });
 
@@ -64,7 +64,16 @@ const Scanner: React.FC = () => {
     }
     alert(`Scanned ${data}`);
     await playSound();
-    mutate({ code: data, quantity: 1 });
+    mutate({
+      janCode: data,
+      quantity: 1,
+      expiryDate: {
+        type: "BEST_BEFORE_DATE",
+        year: 2023,
+        month: 1,
+        day: 1,
+      },
+    });
     setCanScan(false);
   };
 

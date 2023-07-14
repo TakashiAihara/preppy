@@ -4,15 +4,16 @@
 
 Table ExpiryDate {
   id String [pk]
-  type ExpiryType [not null, default: 'EXPIRATION_DATE']
-  dateType ExpiryDateType [not null, default: 'SPECIFIC_DATE']
-  date DateTime [not null]
+  type ExpiryType [not null]
+  year Int [not null]
+  month Int
+  day Int
   skus Sku [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
 
   indexes {
-    (type, dateType, date) [unique]
+    (type, year, month, day) [unique]
   }
 }
 
@@ -26,7 +27,7 @@ Table Jan {
 Table JanSite {
   id String [pk]
   title String [not null]
-  Product Product [not null]
+  products Product [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
 }
@@ -46,20 +47,19 @@ Table Product {
   id String [pk]
   title String [not null]
   image String
-  janCode String [not null]
-  jan Jan [not null]
-  categoryId String [not null]
-  category Category [not null]
+  janCode String
+  jan Jan
   janSiteId String
   janSite JanSite
   skus Sku [not null]
-  tags Tag [not null]
+  productTags ProductTag [not null]
+  categories Category [not null]
   notes Note [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
 
   indexes {
-    (title, janCode, janSiteId) [unique]
+    (title, janCode) [unique]
   }
 }
 
@@ -88,6 +88,7 @@ Table Stock {
   sku Sku [not null]
   groupId String
   group Group
+  stockTags StockTag [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
 
@@ -127,12 +128,26 @@ Table Category {
   }
 }
 
-Table Tag {
+Table ProductTag {
   id String [pk]
   name String [not null]
   user User [not null]
   userId String [not null]
   products Product [not null]
+  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (name, userId) [unique]
+  }
+}
+
+Table StockTag {
+  id String [pk]
+  name String [not null]
+  user User [not null]
+  userId String [not null]
+  stocks Stock [not null]
   updatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
 
@@ -179,9 +194,10 @@ Table User {
   sessions Session [not null]
   stocks Stock [not null]
   groups Group [not null]
-  tags Tag [not null]
+  productTags ProductTag [not null]
+  stockTags StockTag [not null]
   categories Category [not null]
-  Note Note [not null]
+  notes Note [not null]
 }
 
 Table VerificationToken {
@@ -194,15 +210,10 @@ Table VerificationToken {
   }
 }
 
-Enum ExpiryDateType {
-  SPECIFIC_DATE
-  DURING_THE_MONTH
-  DURING_THE_YEAR
-}
-
 Enum ExpiryType {
   EXPIRATION_DATE
   BEST_BEFORE_DATE
+  MANUAL_DATE
 }
 
 Ref: Note.userId > User.id [delete: Cascade]
@@ -211,27 +222,27 @@ Ref: Note.productId > Product.id
 
 Ref: Product.janCode > Jan.code [delete: Cascade]
 
-Ref: Product.categoryId > Category.id [delete: Cascade]
-
 Ref: Product.janSiteId > JanSite.id
 
-Ref: Sku.expiryDateId > ExpiryDate.id [delete: Cascade]
+Ref: Sku.expiryDateId > ExpiryDate.id
 
 Ref: Sku.productId > Product.id
 
 Ref: Stock.userId > User.id [delete: Cascade]
 
-Ref: Stock.skuId > Sku.id
+Ref: Stock.skuId > Sku.id [delete: Cascade]
 
 Ref: Stock.groupId > Group.id
 
 Ref: Group.userId > User.id
 
-Ref: Group.groupId - Group.id
+Ref: Group.groupId - Group.id [delete: Cascade]
 
 Ref: Category.userId > User.id [delete: Cascade]
 
-Ref: Tag.userId > User.id
+Ref: ProductTag.userId > User.id [delete: Cascade]
+
+Ref: StockTag.userId > User.id [delete: Cascade]
 
 Ref: Account.userId > User.id [delete: Cascade]
 

@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node",
+    "cli:build": "pnpm build",
     "lint": "eslint .",
     "type-check": "tsc --noEmit"
   },

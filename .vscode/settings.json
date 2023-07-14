@@ -19,12 +19,16 @@
     "buildscript",
     "CLIENTVAR",
     "dbml",
+    "Fontisto",
     "ianvs",
     "manypkg",
     "mypage",
     "nativewind",
     "NEXTAUTH",
     "nextjs",
+    "outfile",
+    "packagejson",
+    "Skus",
     "Solito",
     "superjson",
     "tailwindcss",
@@ -58,9 +62,6 @@
   "[sql]": {
     "editor.defaultFormatter": "mtxr.sqltools"
   },
-  "[toml]": {
-    "editor.defaultFormatter": "be5invis.toml"
-  },
   "[yaml]": {
     "editor.autoIndent": "advanced",
     "editor.defaultFormatter": "redhat.vscode-yaml",
@@ -84,7 +85,6 @@
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true
   },
-  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "prettier.enable": true,
   "prettier.embeddedLanguageFormatting": "auto"

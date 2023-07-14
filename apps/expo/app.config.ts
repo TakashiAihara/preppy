@@ -26,12 +26,12 @@ const defineConfig = (): ExpoConfig => ({
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#1F104A",
     },
-    package: "com.takashiaihara.preppy",
-    versionCode: 1
+    package: "com.t.preppy",
+    versionCode: 1,
   },
   extra: {
     eas: {
-      "projectId": "e32b71b3-3008-4c5a-b8f7-61602b59ea5d"
+      projectId: "e32b71b3-3008-4c5a-b8f7-61602b59ea5d",
     },
   },
   plugins: [
