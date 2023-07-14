@@ -22,6 +22,14 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "db:truncate": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "db:clear": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
     "dev": {
       "persistent": true,
       "cache": false
@@ -32,6 +40,9 @@
     },
     "dev:ios": {
       "persistent": true,
+      "cache": false
+    },
+    "cli:build": {
       "cache": false
     },
     "build": {
@@ -62,6 +73,7 @@
     "NODE_ENV",
     "SKIP_ENV_VALIDATION",
     "VERCEL",
-    "VERCEL_URL"
+    "VERCEL_URL",
+    "YAHOO_APP_ID"
   ]
 }

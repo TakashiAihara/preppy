@@ -16,7 +16,7 @@ const RootLayout = () => {
     <TRPCProvider>
       <SafeAreaProvider>
         <BottomTabs
-          backBehavior="order"
+          // backBehavior="order"
           safeAreaInsets={insets}
           screenOptions={{
             lazy: true,
@@ -24,8 +24,8 @@ const RootLayout = () => {
             headerStatusBarHeight: 0,
             headerStyle: { height: 0 },
             tabBarActiveTintColor: "#0000ff",
-            tabBarBadge: 3, // defaults? not needed.
-            tabBarBadgeStyle: { backgroundColor: "#ff0000" },
+            // tabBarBadge: 3, // defaults? not needed.
+            // tabBarBadgeStyle: { backgroundColor: "#ff0000" },
             tabBarActiveBackgroundColor: "#ffcc88",
             // tabBarItemStyle: { backgroundColor: "#0000ff" },
             // tabBarStyle: { backgroundColor: "#f472b6" },

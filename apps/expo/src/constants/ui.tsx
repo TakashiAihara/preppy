@@ -4,8 +4,9 @@ import {
   FontAwesome5,
   Fontisto,
   MaterialCommunityIcons,
-  MaterialIcons,
 } from "@expo/vector-icons";
+
+import { api, type RouterOutputs } from "~/utils/api";
 
 export type BottomTabType = {
   name: string;
@@ -19,8 +20,6 @@ export const BottomTabsConstants: BottomTabType[] = [
   },
   {
     name: "queue/index",
-    icon: <MaterialIcons name="queue" size={26} />,
-    label: "Queue",
   },
   {
     name: "queue/[id]",
@@ -108,3 +107,9 @@ export const BottomTabsConstants: BottomTabType[] = [
     name: "mypage/donation",
   },
 ];
+
+export const ExpiryDateType = {
+  EXPIRATION_DATE: "消費期限",
+  BEST_BEFORE_DATE: "賞味期限",
+  MANUAL_DATE: "期限",
+};

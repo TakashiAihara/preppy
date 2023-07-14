@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { extname } from "path";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ log: ["query", "info", "warn", "error"] });
 const seedsDir = "seeds";
 
 const findSeedsFiles = () =>
@@ -12,17 +12,16 @@ const findSeedsFiles = () =>
       withFileTypes: true,
     })
     .filter((e) => e.isFile())
-    .map((e) => e.name);
+    .map((e) => e.name)
+    .sort((a, b) => a.localeCompare(b));
 
 const applySeed = async (seed: any, schemaName: string) => {
   const prim = seed.id ? "id" : "code";
   console.log(`Applying seed for ${schemaName} with primary key ${seed[prim]}`);
 
-  // @ts-ignore TODO: fix this type define
-  await prisma[schemaName].upsert({
-    where: { [prim]: seed[prim] },
-    update: {},
-    create: seed,
+  // @ts-ignore
+  await prisma[schemaName].create({
+    data: seed,
   });
 };
 
@@ -33,8 +32,14 @@ const applySeeds = async (seeds: any, schemaName: string) => {
 };
 
 const applySeedsFile = async (seedsFile: string) => {
-  const schemaName = seedsFile.replace(extname(seedsFile), "");
-  const seeds = JSON.parse(fs.readFileSync(`${seedsDir}/${seedsFile}`, "utf8"));
+  const schemaName = seedsFile
+    .replace(extname(seedsFile), "")
+    .replace(/^\d{3}_/, "");
+
+  console.log(schemaName);
+
+  const seedsJson = fs.readFileSync(`${seedsDir}/${seedsFile}`, "utf8");
+  const seeds = JSON.parse(seedsJson);
   await applySeeds(seeds, schemaName);
 };
 

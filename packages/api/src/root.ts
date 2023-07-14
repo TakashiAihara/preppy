@@ -1,9 +1,9 @@
 import { authRouter } from "./router/auth";
-import { queueRouter } from "./router/queue";
+import { stockRouter } from "./router/stock";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
-  queue: queueRouter,
+  stock: stockRouter,
   auth: authRouter,
 });
 

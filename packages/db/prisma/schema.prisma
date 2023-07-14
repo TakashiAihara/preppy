@@ -8,6 +8,10 @@ generator client {
     previewFeatures = ["jsonProtocol"]
 }
 
+generator dbml {
+    provider = "prisma-dbml-generator"
+}
+
 generator zod {
     provider                         = "zod-prisma-types"
     output                           = "../zod"
@@ -26,23 +30,19 @@ generator zod {
     writeNullishInModelTypes         = false // default: false
 }
 
-generator dbml {
-    provider = "prisma-dbml-generator"
-}
-
-// Attributes
 model ExpiryDate {
-    id       String         @id @default(cuid())
-    type     ExpiryType     @default(EXPIRATION_DATE)
-    dateType ExpiryDateType @default(SPECIFIC_DATE)
-    date     DateTime       @db.Date
+    id    String     @id @default(cuid())
+    type  ExpiryType
+    year  Int
+    month Int?
+    day   Int?
 
     skus Sku[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
-    @@unique([type, dateType, date])
+    @@unique([type, year, month, day])
 }
 
 // Pure Jan
@@ -62,12 +62,10 @@ model JanSite {
     id    String @id @default(cuid())
     title String
 
-    Product Product[]
+    products Product[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
-
-    @@unique([id])
 }
 
 model Note {
@@ -91,32 +89,30 @@ model Product {
     title String
     image String?
 
-    janCode    String   @db.VarChar(14)
-    jan        Jan      @relation(fields: [janCode], references: [code], onDelete: Cascade)
-    categoryId String
-    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-    janSiteId  String?
-    janSite    JanSite? @relation(fields: [janSiteId], references: [id])
+    janCode   String?  @db.VarChar(14)
+    jan       Jan?     @relation(fields: [janCode], references: [code], onDelete: Cascade)
+    janSiteId String?
+    janSite   JanSite? @relation(fields: [janSiteId], references: [id])
 
-    skus  Sku[]
-    tags  Tag[]
-    notes Note[]
+    skus        Sku[]
+    productTags ProductTag[]
+    categories  Category[]
+    notes       Note[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
-    @@unique([title, janCode, janSiteId])
+    @@unique([title, janCode])
     @@index([title])
 }
 
-// Product x ExpiryDate (or else attributes) -> Sku
 model Sku {
     id String @id @default(cuid())
 
     // attributes
     expiryDateId String?
-    expiryDate   ExpiryDate? @relation(fields: [expiryDateId], references: [id], onDelete: Cascade)
-    productId    String      @db.VarChar(14)
+    expiryDate   ExpiryDate? @relation(fields: [expiryDateId], references: [id])
+    productId    String
     product      Product     @relation(fields: [productId], references: [id])
 
     stocks Stock[]
@@ -136,9 +132,11 @@ model Stock {
     userId  String
     user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     skuId   String
-    sku     Sku     @relation(fields: [skuId], references: [id])
+    sku     Sku     @relation(fields: [skuId], references: [id], onDelete: Cascade)
     groupId String?
     group   Group?  @relation(fields: [groupId], references: [id])
+
+    stockTags StockTag[]
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -154,7 +152,7 @@ model Group {
 
     user    User    @relation(fields: [userId], references: [id])
     userId  String
-    group   Group?  @relation("GroupToGroup", fields: [groupId], references: [id])
+    group   Group?  @relation("GroupToGroup", fields: [groupId], references: [id], onDelete: Cascade)
     groupId String?
 
     groups Group[] @relation("GroupToGroup")
@@ -184,11 +182,11 @@ model Category {
     @@index([name, userId])
 }
 
-model Tag {
+model ProductTag {
     id   String @id @default(cuid())
     name String @db.Text
 
-    user   User   @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
 
     products Product[]
@@ -200,15 +198,26 @@ model Tag {
     @@index([name, userId])
 }
 
-enum ExpiryDateType {
-    SPECIFIC_DATE
-    DURING_THE_MONTH
-    DURING_THE_YEAR
+model StockTag {
+    id   String @id @default(cuid())
+    name String @db.Text
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+
+    stocks Stock[]
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    @@unique([name, userId])
+    @@index([name, userId])
 }
 
 enum ExpiryType {
     EXPIRATION_DATE
     BEST_BEFORE_DATE
+    MANUAL_DATE
 }
 
 // model Company {
@@ -275,13 +284,14 @@ model User {
     emailVerified DateTime?
     image         String?
 
-    accounts   Account[]
-    sessions   Session[]
-    stocks     Stock[]
-    groups     Group[]
-    tags       Tag[]
-    categories Category[]
-    Note       Note[]
+    accounts    Account[]
+    sessions    Session[]
+    stocks      Stock[]
+    groups      Group[]
+    productTags ProductTag[]
+    stockTags   StockTag[]
+    categories  Category[]
+    notes       Note[]
 
     @@unique([email])
     @@index([name, email])
