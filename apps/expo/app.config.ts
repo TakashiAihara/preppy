@@ -35,6 +35,7 @@ const defineConfig = (): ExpoConfig => ({
     },
   },
   plugins: [
+    "expo-router",
     "./expo-plugins/with-modify-gradle.js",
     [
       "expo-barcode-scanner",
