@@ -31,12 +31,9 @@ export const BottomTabsConstants: BottomTabType[] = [
     name: "product/[id]",
   },
   {
-    name: "stock/index",
+    name: "stock",
     icon: <FontAwesome5 name="boxes" size={26} />,
     label: "Stock",
-  },
-  {
-    name: "stock/[id]",
   },
   {
     name: "sku/index",

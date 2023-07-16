@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
-import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 
@@ -23,11 +23,13 @@ const StockCard: React.FC<{
     <TouchableOpacity onPress={() => router.push(`/stock/${id}`)}>
       <View className="w-screen flex-row">
         <View className="h-20 w-20">
-          <Image
-            alt={`${title} - image`}
-            className="h-20 w-20 rounded-xl"
-            source={{ uri: image ?? "" }}
-          />
+          {image && (
+            <Image
+              alt={`${title} - image`}
+              className="h-20 w-20 rounded-xl"
+              source={{ uri: image }}
+            />
+          )}
         </View>
         <View className="w-full flex-col gap-4 px-2">
           <View className="flex-col">

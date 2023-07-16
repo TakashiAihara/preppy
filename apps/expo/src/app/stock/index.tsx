@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 
 import { api } from "~/utils/api";
@@ -20,7 +19,6 @@ const StockIndex = () => {
 
   return (
     <SafeAreaView>
-      <Stack.Screen options={{ title: "Preppy" }} />
       <View className="h-full w-full overflow-y-scroll">
         {/* <TouchableOpacity
           className="w-full bg-amber-300 p-1"
