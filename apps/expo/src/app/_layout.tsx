@@ -3,7 +3,7 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { Tabs as BottomTabs } from "expo-router";
+import { Tabs as BottomTabs } from "expo-router/tabs";
 import { StatusBar } from "expo-status-bar";
 
 import { TRPCProvider } from "~/utils/api";

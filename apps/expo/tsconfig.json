@@ -7,8 +7,8 @@
       "@/*": ["./*"]
     },
     "jsx": "react-native",
-    "types": ["nativewind/types", "webpack-env", "@acme/type"]
+    "types": ["nativewind/types", "webpack-env", "@acme/type", "jest"]
   },
-  "include": ["expo-plugins", "src", "*.ts", "**/*.js", "index.tsx"],
+  "include": ["expo-plugins", "src", "*.ts", "**/*.js", "index.tsx", "e2e/starter.test.ts"],
   "exclude": ["node_modules", "*.config.js"]
 }

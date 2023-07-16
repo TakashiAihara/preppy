@@ -17,6 +17,7 @@
     "dev": "turbo dev --parallel",
     "dev:android": "turbo dev:android --parallel",
     "dev:ios": "turbo dev:ios --parallel",
+    "emu:start": "ADBKEY=$(cat ~/.android/adbkey) docker compose -f docker/docker-compose.yaml up -d",
     "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
     "lint": "turbo lint && manypkg check",
     "lint:fix": "turbo lint:fix && manypkg fix",
