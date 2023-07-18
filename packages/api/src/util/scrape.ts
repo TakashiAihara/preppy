@@ -11,7 +11,7 @@ type scrapedData = {
 
 export const fetchJanken = async (
   janCode: string,
-): Promise<scrapedData | void> => {
+): Promise<{ name: string }> => {
   // TODO: refactor
   try {
     const response = await axios.post<Buffer[]>(
@@ -43,15 +43,17 @@ export const fetchJanken = async (
     console.log(data);
 
     return {
-      name: data || "",
-      image: "",
+      name: data,
     };
   } catch (error) {
     console.error("Error:", error);
+    throw new Error("Unexpected error occurred in fetchJanken");
   }
 };
 
-export const fetchYahoo = async (janCode: string): Promise<scrapedData> => {
+export const fetchYahoo = async (
+  janCode: string,
+): Promise<{ name: string; image: string }> => {
   console.log(process.env);
 
   axios.interceptors.request.use((request) => {
@@ -83,13 +85,30 @@ export const fetchYahoo = async (janCode: string): Promise<scrapedData> => {
       throw new Error("No data");
     }
 
-    const { headLine, image } = hit;
+    const { name, image } = hit;
     return {
-      name: headLine,
+      name,
       image: image.medium,
     };
   } catch (error) {
     console.log(`Error: ${janCode}`);
-    throw new Error("Unexpected Error Occurred");
+    throw new Error("Unexpected error occurred in fetchYahoo");
   }
+};
+
+export const fetchYahooAndJanken = async (
+  janCode: string,
+): Promise<scrapedData> => {
+  const [yahooResult, jankenResult] = await Promise.all([
+    fetchYahoo(janCode),
+    fetchJanken(janCode),
+  ]);
+
+  console.log(jankenResult);
+  console.log(yahooResult);
+
+  return {
+    image: yahooResult.image,
+    name: jankenResult.name || yahooResult.name,
+  };
 };
