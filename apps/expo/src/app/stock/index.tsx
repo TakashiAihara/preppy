@@ -4,7 +4,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 
 import { api } from "~/utils/api";
-import Scanner from "~/components/Scanner";
 import StockCard from "~/components/StockCard";
 
 const StockIndex = () => {
@@ -16,7 +15,6 @@ const StockIndex = () => {
   //   onSettled: () => utils.stock.all.invalidate(),
   // });
   const { data } = stockQuery;
-
   return (
     <SafeAreaView>
       <View className="h-full w-full overflow-y-scroll">
@@ -36,12 +34,11 @@ const StockIndex = () => {
           renderItem={(p) => (
             <StockCard
               stock={p.item}
+              key={p.item.id}
               // onDelete={() => deleteStockMutation.mutate(p.item.id)}
             />
           )}
         />
-
-        <Scanner />
       </View>
     </SafeAreaView>
   );

@@ -1,11 +1,11 @@
 import { type PrismaCtx } from "../type/common/prisma";
-import { fetchYahoo } from "../util/scrape";
+import { fetchYahooAndJanken } from "../util/scrape";
 
 const TEST_SITE_ID = "003";
 const TEST_CATEGORY_ID = "001";
 
 export const createWithJanCode = async (prisma: PrismaCtx, janCode: string) => {
-  const { image, name } = await fetchYahoo(janCode);
+  const { image, name } = await fetchYahooAndJanken(janCode);
 
   return prisma.product.create({
     data: {

@@ -69,8 +69,10 @@ export const stockRouter = createTRPCRouter({
         return addQuantity(prisma, existsStock.id, quantity);
       }
 
-      const product = await createOrFindWithJanCode(prisma, janCode);
-      const expiryDate = await createOrFindExpiryDate(prisma, input.expiryDate);
+      const [product, expiryDate] = await Promise.all([
+        createOrFindWithJanCode(prisma, janCode),
+        createOrFindExpiryDate(prisma, input.expiryDate),
+      ]);
 
       return createWithSku(prisma, product.id, expiryDate.id, quantity);
     }),

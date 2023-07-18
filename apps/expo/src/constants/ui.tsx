@@ -25,15 +25,26 @@ export const BottomTabsConstants: BottomTabType[] = [
     name: "queue/[id]",
   },
   {
-    name: "product/index",
-  },
-  {
-    name: "product/[id]",
+    name: "product",
+    icon: <MaterialCommunityIcons name="text-box" size={24} color="black" />,
+    label: "Product",
   },
   {
     name: "stock",
-    icon: <FontAwesome5 name="boxes" size={26} />,
+    icon: (
+      <MaterialCommunityIcons
+        name="text-box-multiple"
+        size={24}
+        color="black"
+      />
+    ),
     label: "Stock",
+  },
+  {
+    name: "create/stock",
+    icon: <MaterialCommunityIcons name="camera-plus" size={24} color="black" />,
+
+    label: "Scan",
   },
   {
     name: "sku/index",
@@ -55,8 +66,6 @@ export const BottomTabsConstants: BottomTabType[] = [
   },
   {
     name: "group/index",
-    icon: <MaterialCommunityIcons name="file-tree" size={26} />,
-    label: "Group",
   },
   {
     name: "group/[id]",
@@ -69,16 +78,12 @@ export const BottomTabsConstants: BottomTabType[] = [
   },
   {
     name: "tag/index",
-    icon: <FontAwesome name="tags" size={26} />,
-    label: "Tag",
   },
   {
     name: "tag/[id]",
   },
   {
     name: "ranking/index",
-    icon: <MaterialCommunityIcons name="podium" size={26} />,
-    label: "Ranking",
   },
   {
     name: "mypage/index",
