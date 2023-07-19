@@ -56,7 +56,6 @@
     "@types/react": "18.2.15",
     "@types/webpack-env": "^1.18.0",
     "babel-plugin-module-resolver": "^5.0.0",
-    "eas-cli": "^3.13.3",
     "eslint": "^8.42.0",
     "postcss": "^8.4.24",
     "react-devtools": "^4.27.8",

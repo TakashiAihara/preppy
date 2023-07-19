@@ -21,6 +21,11 @@
         "simulator": true
       }
     },
+    "preview2": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "production": {
       "extends": "base"
     }
