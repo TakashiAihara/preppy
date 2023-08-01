@@ -2,12 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Next.js",
+      "name": "main(Next.js)",
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
-      "cwd": "${workspaceFolder}/apps/nextjs/",
-      "skipFiles": ["<node_internals>/**"]
+      "cwd": "${workspaceFolder}/apps/main/web/",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }
