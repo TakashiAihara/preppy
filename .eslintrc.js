@@ -8,13 +8,13 @@ const config = {
     tsconfigRootDir: __dirname,
     project: [
       "./tsconfig.json",
-      "./apps/*/tsconfig.json",
+      "./apps/main/*/tsconfig.json",
       "./packages/*/tsconfig.json",
     ],
   },
   settings: {
     next: {
-      rootDir: ["apps/nextjs"],
+      rootDir: ["apps/main/web"],
     },
   },
 };
